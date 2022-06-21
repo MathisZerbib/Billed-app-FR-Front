@@ -2,12 +2,11 @@
  * @jest-environment jsdom
  */
 
-import { container, screen, waitFor } from "@testing-library/dom"
-import userEvent from '@testing-library/user-event'
+import { container, screen, fireEvent, waitFor } from "@testing-library/dom"
 
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
-import { handleClickIconEye } from "../containers/Bills.js"
+import { handleClickIconEye } from "../containers/Bills.js";
 import { ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 
@@ -44,10 +43,22 @@ describe("Given I am connected as an employee", () => {
 
             await waitFor(() => screen.getAllByTestId('icon-eye'))
             let iconEye = screen.getAllByTestId('icon-eye')
+                // let modale = screen.getByTestId('')
+
+
 
             for (let i = 0; i < iconEye.lenght; i++) {
-                iconEye[i].click()
-                expect(handleClickIconEye.toHaveBeenCalled())
+                const handleClick = jest.fn((e) => e.preventDefault());
+
+                iconEye[i].addEventListener("click", handleClick);
+                // iconEye[i].addEventListener('click', handleClickIconEye(iconEye[i]))
+                // expect(handleClickIconEye(iconEye[i].toHaveBeenCalled()))
+                // expect(iconEye[i]).toBeTruthy()
+                fireEvent.click(iconEye[i]);
+                expect($('#modal-dialog')).toBeTruthy();
+
+                // expect($('#modal-dialog').classList.contains('modal-dialog-centered modal-lg')).toBe(true)
+                // expect(handleClickIconEye.toHaveBeenCalled())
             }
 
 
