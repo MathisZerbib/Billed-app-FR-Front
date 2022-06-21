@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { screen, waitFor } from "@testing-library/dom"
+import { container, screen, waitFor } from "@testing-library/dom"
 import userEvent from '@testing-library/user-event'
 
 import BillsUI from "../views/BillsUI.js"
@@ -32,6 +32,7 @@ describe("Given I am connected as an employee", () => {
                 //to-do write expect expression
         })
 
+
         test("Then bill icon eye should be clickable", async() => {
             Object.defineProperty(window, 'localStorage', { value: localStorageMock })
             window.localStorage.setItem('user', JSON.stringify({
@@ -39,18 +40,21 @@ describe("Given I am connected as an employee", () => {
             }))
             router()
             window.onNavigate(ROUTES_PATH.Bills)
-            await waitFor(() => screen.getByTestId('icon-eye'))
-            let iconEye = screen.getByTestId('icon-eye')
-            console.log("======== iconEye =======  ", iconEye)
-            expect(iconEye.classList.contains('active-icon')).toBe(false)
-                //to-do write expect expression
-                // const iconEye = screen.getByTestId('icon-eye')
+            document.body.innerHTML = BillsUI({ data: bills })
 
-            // expect(iconEye).toBeTruthy()
+            await waitFor(() => screen.getAllByTestId('icon-eye'))
+            let iconEye = screen.getAllByTestId('icon-eye')
+
+            for (let i = 0; i < iconEye.lenght; i++) {
+                iconEye[i].click()
+                expect(handleClickIconEye.toHaveBeenCalled())
+            }
+
+
+            // expect(EyeIcon.getAttribute('data-bill-url')).   
 
             // expect(EyeIcon.getAttribute('data-bill-url')).toEqual('http://localhost:5678/null')
 
-            // expect(EyeIcon.classList.contains('active-icon')).toBe(false)
             //to-do write expect expression
         })
 
