@@ -21,6 +21,20 @@ export default class NewBill {
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
     const formData = new FormData()
+
+    const fileExtension = fileName.split(".").pop()
+    const extensionRgx = /(png|jpg|jpeg)/g
+    const isExtensionCorrect = fileExtension.toLowerCase().match(extensionRgx)
+
+    if(isExtensionCorrect) {
+      this.firestoreHandler(fileName, file, isExtensionCorrect)
+    } else if(!isExtensionCorrect) {
+      alert('file type not allowed')
+      this.document.querySelector(`input[data-testid="file"]`).value = null
+    }
+
+
+    
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
