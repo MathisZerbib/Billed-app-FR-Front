@@ -26,8 +26,27 @@ export default class NewBill {
     const extensionRgx = /(png|jpg|jpeg)/g
     const isExtensionCorrect = fileExtension.toLowerCase().match(extensionRgx)
 
+    const email = JSON.parse(localStorage.getItem("user")).email
+    formData.append('file', file)
+    formData.append('email', email)
     if(isExtensionCorrect) {
-      this.firestoreHandler(fileName, file, isExtensionCorrect)
+
+  
+      this.store
+        .bills()
+        .create({
+          data: formData,
+          headers: {
+            noContentType: true
+          }
+        })
+        .then(({fileUrl, key}) => {
+          console.log(fileUrl)
+          this.billId = key
+          this.fileUrl = fileUrl
+          this.fileName = fileName
+        }).catch(error => console.error(error))
+
     } else if(!isExtensionCorrect) {
       alert('file type not allowed')
       this.document.querySelector(`input[data-testid="file"]`).value = null
@@ -35,24 +54,7 @@ export default class NewBill {
 
 
     
-    const email = JSON.parse(localStorage.getItem("user")).email
-    formData.append('file', file)
-    formData.append('email', email)
 
-    this.store
-      .bills()
-      .create({
-        data: formData,
-        headers: {
-          noContentType: true
-        }
-      })
-      .then(({fileUrl, key}) => {
-        console.log(fileUrl)
-        this.billId = key
-        this.fileUrl = fileUrl
-        this.fileName = fileName
-      }).catch(error => console.error(error))
   }
   handleSubmit = e => {
     e.preventDefault()
