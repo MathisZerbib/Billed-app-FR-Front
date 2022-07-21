@@ -30,8 +30,6 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
     if(isExtensionCorrect) {
-
-  
       this.store
         .bills()
         .create({

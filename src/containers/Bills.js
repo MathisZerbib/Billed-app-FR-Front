@@ -41,7 +41,8 @@ export default class {
 
 
 function sortByDate($array) {
-    $array.sort((a, b) => new Date(a.date) - new Date(b.date))
+    $array.sort((a, b) => new Date(b.date) - new Date(a.date))
+    console.log($array, "$array")
     return $array.map(doc => {
         try {
             return {
